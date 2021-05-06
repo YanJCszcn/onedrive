@@ -63,6 +63,31 @@ Refer to [docs/national-cloud-deployments.md](https://github.com/abraunegg/onedr
 ### Docker support
 Refer to [docs/Docker.md](https://github.com/abraunegg/onedrive/blob/master/docs/Docker.md)
 
+### Access OneDrive service through a proxy
+If you have a requirement to run the client through a proxy, there are a couple of ways to achieve this:
+1.  Set proxy configuration in `~/.bashrc` to allow the authorization process and when utilizing `--synchronize`
+2.  If running as a systemd service, edit the applicable systemd service file to include the proxy configuration information:
+```text
+[Unit]
+Description=OneDrive Free Client
+Documentation=https://github.com/abraunegg/onedrive
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Environment="HTTP_PROXY=http://ip.address:port"
+Environment="HTTPS_PROXY=http://ip.address:port"
+ExecStart=/usr/local/bin/onedrive --monitor
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target
+```
+
+**Note:** After modifying the service files, you will need to run `sudo systemctl daemon-reload` to ensure the service file changes are picked up. A restart of the OneDrive service will also be required to pick up the change to send the traffic via the proxy server
+
+
 ### 启动http、https、ftp代理
 设置命令行下所有的其它程序使用socks代理，安装一个privoxy代理工具，实现终端内socks5转换为http/https，进而将http/https请求转发
 给ss，实现终端内的代理
