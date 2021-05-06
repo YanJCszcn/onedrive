@@ -62,3 +62,27 @@ Refer to [docs/national-cloud-deployments.md](https://github.com/abraunegg/onedr
 
 ### Docker support
 Refer to [docs/Docker.md](https://github.com/abraunegg/onedrive/blob/master/docs/Docker.md)
+
+### 启动http、https、ftp代理
+设置命令行下所有的其它程序使用socks代理，安装一个privoxy代理工具，实现终端内socks5转换为http/https，进而将http/https请求转发
+给ss，实现终端内的代理
+- sudo apt-get install privoxy
+
+配置/etc/privoxy/config文件
+- 保证存在下面两行存在, forward-socks5t 如果不行就改成 forward-socks5 
+- listen-address localhost:8118
+- forward-socks5t / 127.0.0.1:1080 .
+注意：此处可以将设置 listen-address 0.0.0.0:8118，这样局域网内也可以进行代理
+
+注意：也可以使用另外一种方式配置，如: https://guojing.io/posts/privoxy/
+
+配置/etc/profile
+- 在末尾添加以下三行：
+- export http_proxy=http://127.0.0.1:8118
+- export https_proxy=http://127.0.0.1:8118
+- export ftp_proxy=http://127.0.0.1:8118 #ftp的代理可以根据需要添加
+注意： source /etc/profile
+
+启动privoxy
+sudo privoxy --user privoxy /etc/privoxy/config
+注意：之后每次修改了配置文件后，都要执行sudo service privoxy restart来重启服务
