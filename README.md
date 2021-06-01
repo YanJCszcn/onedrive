@@ -66,7 +66,7 @@ Refer to [docs/Docker.md](https://github.com/abraunegg/onedrive/blob/master/docs
 ### Access OneDrive service through a proxy
 If you have a requirement to run the client through a proxy, there are a couple of ways to achieve this:
 1.  Set proxy configuration in `~/.bashrc` to allow the authorization process and when utilizing `--synchronize`
-2.  If running as a systemd service, edit the applicable systemd service file to include the proxy configuration information:
+2.  If running as a systemd service, edit the applicable systemd service file (/usr/lib/systemd/user/onedrive.service) to include the proxy configuration information:
 ```text
 [Unit]
 Description=OneDrive Free Client
